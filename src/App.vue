@@ -110,15 +110,9 @@ function handleChange(event: any) {
   data.birthday = event.data.birthday
 }
 
-type ErrorObject = {
-  instancePath: string;
-  message: string;
-  schemaPath: string;
-  keyword: string;
-  params: Record<string, unknown>;
-};
 
 
+// get the age of the user
 function countYear(): number {
   try {
     const today = new Date()
@@ -136,7 +130,13 @@ function countYear(): number {
 
 
 
-
+type ErrorObject = {
+  instancePath: string;
+  message: string;
+  schemaPath: string;
+  keyword: string;
+  params: Record<string, unknown>;
+};
 
 const errors = ref<ErrorObject[]>([])
 
@@ -147,7 +147,7 @@ watch(
     console.log(newVal, oldVal)
     if (!newVal.match('^\\S+@\\S+$')) {
       console.log('hellow')
-      errors.value.push({
+      errors.value.push({ // add error to the list [JSONForms style]
           instancePath: '/email',
           schemaPath: '/properties/email/pattern',
           keyword: 'pattern',
@@ -155,13 +155,13 @@ watch(
           message: 'Invalid Email Format',
         },)
     } else {
-      errors.value = errors.value.filter((error) => error.instancePath !== '/email')
+      errors.value = errors.value.filter((error) => error.instancePath !== '/email') // remove the error if the email is valid
     }
   }
 )
 
-const isValidAge = ref<boolean>(false)
 // ensure that the age is 18 or older everytime birthday is toggled/changed
+const isValidAge = ref<boolean>(false)
 watch(
   ()=> data.birthday,
   (newVal: string, oldVal: string) => {
